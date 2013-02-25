@@ -1,0 +1,7 @@
+.idea/
+*.pyc
+settings/
+build/
+dist/
+pykontur.egg-info/
+examples/
