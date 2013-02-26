@@ -1,19 +1,19 @@
+__author__ = 'Mikhail Brel <minya.drel@gmail.com>'
 from model.context import Context
 from model.folder import Folder
 from model.task import Task
 from model.xmlutil import extract_tag
-
-__author__ = 'minya'
-
 from xml.etree import ElementTree
 
+
 def render_task(tree, t, prefix):
-	if t.completed <> None:
+	if t.completed is not None:
 		return
-	print prefix + " " + t.name + " (" + (t.modified or "never") +  ")"
-	if tree.has_key(t.id):
+	print prefix + ' ' + t.name + ' (' + (t.modified or 'never') + ')'
+	if t.id in tree:
 		for task in tree[t.id]:
 			render_task(tree, task, prefix + '\t')
+
 
 tree = ElementTree.parse("examples/contents.xml")
 root = tree.getroot()
@@ -31,23 +31,23 @@ for e in root:
 		task.fromXmlNode(e)
 		tasks[task.id] = task
 		parent = task.parentRef or "/"
-		if not tasks_tree.has_key(parent):
+		if not parent in tasks_tree:
 			tasks_tree[parent] = []
 		tasks_tree[parent].append(task)
 	elif tag == 'folder':
 		folder = Folder()
 		folder.fromXmlNode(e)
 		folders[folder.id] = folder
-		parent_fldr = folder.parentRef or "/"
-		if not folders_tree.has_key(parent_fldr):
-			folders_tree[parent_fldr] = []
-		folders_tree[parent_fldr].append(folder)
+		parent_folder = folder.parentRef or "/"
+		if not parent_folder in folders_tree:
+			folders_tree[parent_folder] = []
+		folders_tree[parent_folder].append(folder)
 	elif tag == 'context':
 		context = Context()
 		context.fromXmlNode(e)
 		contexts[context.id] = context
 		parent_ctx = context.parentRef or "/"
-		if not contexts_tree.has_key(parent_ctx):
+		if not parent_ctx in contexts_tree:
 			contexts_tree[parent_ctx] = []
 		contexts_tree[parent_ctx].append(context)
 

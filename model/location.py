@@ -1,6 +1,7 @@
-__author__ = 'minya'
+__author__ = 'Mikhail Brel <minya.drel@gmail.com>'
 
-class Location(object):
+
+class Location():
 	def __init__(self, latitude, longitude):
 		self.latitude = latitude
 		self.longitude = longitude

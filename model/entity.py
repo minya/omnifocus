@@ -5,7 +5,7 @@ from model.xmlutil import*
 
 class Entity(object):
 	def fromXmlNode(self, elem):
-		id = elem.attrib['id']
+		entity_id = elem.attrib['id']
 		ns = extract_ns(elem.tag)
 		tag = extract_tag(elem.tag)
 		parentRef_el_list = elem.findall('.//' + ns + tag)
@@ -25,7 +25,7 @@ class Entity(object):
 		rank = rank_el.text
 
 		self._ns = ns
-		self.id = id
+		self.id = entity_id
 		self.parentRef = parentRef
 		self.added = added
 		self.modified = modified

@@ -1,7 +1,7 @@
+__author__ = 'Mikhail Brel <minya.drel@gmail.com>'
+
 from model.entity import Entity
 from model.project import Project
-
-__author__ = 'minya'
 
 
 class Task(Entity):
@@ -31,4 +31,3 @@ class Task(Entity):
 		self.due = due
 		self.start = start
 		self.order = order or "parallel"
-

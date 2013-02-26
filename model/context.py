@@ -1,7 +1,5 @@
+__author__ = 'Mikhail Brel <minya.drel@gmail.com>'
 from model.location import Location
-
-__author__ = 'minya'
-
 from model.entity import Entity
 
 
