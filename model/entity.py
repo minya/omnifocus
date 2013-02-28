@@ -5,6 +5,7 @@ from model.xmlutil import*
 
 class Entity(object):
 	def fromXmlNode(self, elem):
+		self._elem = elem
 		entity_id = elem.attrib['id']
 		ns = extract_ns(elem.tag)
 		tag = extract_tag(elem.tag)
@@ -32,5 +33,12 @@ class Entity(object):
 		self.name = name
 		self.rank = rank
 
-	def toXmlNode(self, xmlNode):
-		pass
+	def toXmlNode(self):
+		return self._elem
+
+	def merge(self, elemUpd):
+		for child in elemUpd:
+			same_node = self._elem.findall(child.tag)
+			if len(same_node) > 0:
+				same_node[0].text = child.text
+		self.fromXmlNode(self._elem)
