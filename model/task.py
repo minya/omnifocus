@@ -21,12 +21,18 @@ class Task(Entity):
 		if len(project_el_list) > 0:
 			project = Project.FromXmlElement(project_el_list[0])
 
+		folder_el_list = elem.findall('.//' + self._ns + 'folder')
+		folderRef = None
+		if len(folder_el_list) > 0:
+			folderRef = folder_el_list[0].attrib['idref']
+
 		completed = Task.get_string_field(elem, self._ns, "completed")
 		due = Task.get_string_field(elem, self._ns, "due")
 		start = Task.get_string_field(elem, self._ns, "start")
 		order = Task.get_string_field(elem, self._ns, "order")
 
 		self.project = project
+		self.folderRef = folderRef
 		self.completed = completed
 		self.due = due
 		self.start = start

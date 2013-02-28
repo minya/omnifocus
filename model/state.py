@@ -24,7 +24,7 @@ class State(object):
 				task = Task()
 				task.fromXmlNode(e)
 				self.tasks[task.id] = task
-				parent = task.parentRef or "/"
+				parent = task.parentRef or task.folderRef or "/"
 				if not parent in self.tasks_tree:
 					self.tasks_tree[parent] = []
 				self.tasks_tree[parent].append(task)
