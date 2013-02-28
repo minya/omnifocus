@@ -36,20 +36,22 @@ def render_state(state):
 		if task.folderRef == "/":
 			render_task(state.tasks_tree, task, "")
 
-state = State()
-first = True
-for file in os.listdir("examples"):
-	if os.path.splitext(file)[1] != ".zip":
-		continue
-	zfile = ZipFile("examples/" + file)
-	content = zfile.read("contents.xml")
-	tree = ElementTree.fromstring(content)
-	if first:
-		state.fromXml(tree)
-		first = False
-	else:
-		state.merge(tree)
-	a = ""
 
+def get_state():
+	state = State()
+	first = True
+	for file in os.listdir("examples"):
+		if os.path.splitext(file)[1] != ".zip":
+			continue
+		zfile = ZipFile("examples/" + file)
+		content = zfile.read("contents.xml")
+		tree = ElementTree.fromstring(content)
+		if first:
+			state.fromXml(tree)
+			first = False
+		else:
+			state.merge(tree)
+	return  state
 
-render_state(state)
+# render_state(get_state())
+
