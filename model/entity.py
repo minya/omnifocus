@@ -1,3 +1,5 @@
+import exceptions
+
 __author__ = 'Mikhail Brel <minya.drel@gmail.com>'
 
 from model.xmlutil import*
@@ -20,10 +22,16 @@ class Entity(object):
 			modified = modified_el_list[0].text
 		else:
 			modified = None
-		name_el = elem.findall('.//' + ns + 'name')[0]
-		name = name_el.text
-		rank_el = elem.findall('.//' + ns + 'rank')[0]
-		rank = rank_el.text
+		try:
+			name_el = elem.findall('.//' + ns + 'name')[0]
+			name = name_el.text
+		except:
+			name = ""
+		try:
+			rank_el = elem.findall('.//' + ns + 'rank')[0]
+			rank = rank_el.text
+		except:
+			rank = "0"
 
 		self._ns = ns
 		self.id = entity_id

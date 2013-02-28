@@ -1,8 +1,8 @@
+import os
+from zipfile import ZipFile
+
 __author__ = 'Mikhail Brel <minya.drel@gmail.com>'
-from model.context import Context
-from model.folder import Folder
-from model.task import Task
-from model.xmlutil import extract_tag
+from model.state import State
 from xml.etree import ElementTree
 
 
@@ -14,48 +14,39 @@ def render_task(tree, t, prefix):
 		for task in tree[t.id]:
 			render_task(tree, task, prefix + '\t')
 
+def render_state(state):
+	print "tasks: %i" % len(state.tasks)
+	print "folders: %i" % len(state.folders)
+	print "contexts: %i" % len(state.contexts)
 
-tree = ElementTree.parse("examples/contents.xml")
-root = tree.getroot()
-tasks = dict()
-tasks_tree = dict()
-folders = dict()
-folders_tree = dict()
-contexts = dict()
-contexts_tree = dict()
+	for f in state.folders_tree["/"]:
+		print "[%s]" % f.name
+	for task in state.tasks_tree["/"]:
+		render_task(state.tasks_tree, task, "")
 
-for e in root:
-	tag = extract_tag(e.tag)
-	if tag == 'task':
-		task = Task()
-		task.fromXmlNode(e)
-		tasks[task.id] = task
-		parent = task.parentRef or "/"
-		if not parent in tasks_tree:
-			tasks_tree[parent] = []
-		tasks_tree[parent].append(task)
-	elif tag == 'folder':
-		folder = Folder()
-		folder.fromXmlNode(e)
-		folders[folder.id] = folder
-		parent_folder = folder.parentRef or "/"
-		if not parent_folder in folders_tree:
-			folders_tree[parent_folder] = []
-		folders_tree[parent_folder].append(folder)
-	elif tag == 'context':
-		context = Context()
-		context.fromXmlNode(e)
-		contexts[context.id] = context
-		parent_ctx = context.parentRef or "/"
-		if not parent_ctx in contexts_tree:
-			contexts_tree[parent_ctx] = []
-		contexts_tree[parent_ctx].append(context)
+state = State()
+first = True
+for file in os.listdir("examples"):
+	if os.path.splitext(file)[1] != ".zip":
+		continue
+	zfile = ZipFile("examples/" + file)
+	content = zfile.read("contents.xml")
+	tree = ElementTree.fromstring(content)
+	if first:
+		state.fromXml(tree)
+		first = False
+	else:
+		state.merge(tree)
+	a = ""
 
-print "tasks: %i" % len(tasks)
-print "folders: %i" % len(folders)
-print "contexts: %i" % len(contexts)
 
-for f in folders:
-	print "[%s]" % folders[f].name
-for task in tasks_tree["/"]:
-	render_task(tasks_tree, task, "")
+# tree = ElementTree.parse("examples/contents.xml")
+# state = State()
+# state.fromXml(tree)
+#
+render_state(state)
+#
+# tree_update = ElementTree.parse("examples/contents_1.xml")
+# state.merge(tree_update)
+#
+# render_state(state)
